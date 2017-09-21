@@ -1,0 +1,10 @@
+citHeader("To cite SSLASSO in publications use:")
+
+citEntry(
+  entry = "Article",
+  author = person("Veronika", "Rockova"),
+  title = "The Spike-and-Slab LASSO",
+  journal = "Journal of the American Statistical Association (Accepted)",
+  year = "2016",
+  textVersion = "Rockova, V. and George, E, (2016) The Spike-and-Slab LASSO. Journal of the American Statistical Association (Accepted)."
+)
