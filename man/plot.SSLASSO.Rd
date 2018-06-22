@@ -32,7 +32,7 @@ theta<-0.5
 
 # Separable penalty with fixed theta
 
-result<-SSLASSO(X, Y,penalty="separable", variance = "known", 
+result<-SSLASSO(X, Y,penalty="separable", variance = "fixed", 
 lambda1 = lambda1, lambda0 = lambda0,theta=theta)
 
 plot(result)

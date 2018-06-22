@@ -7,23 +7,23 @@
   linear regression models over a grid of values for the regularization
   parameter \code{lambda_0}. The code has been adapted from the \code{ncvreg} package (Breheny and Huang, 2011). }
 \usage{
-SSLASSO(X, y, penalty = c("separable", "adaptive"), variance = c("known", "unknown"), 
-lambda1, lambda0, theta = 0.5, sigma = 1, a = 1, b = p, nu = 0, xi = 0, 
+SSLASSO(X, y, penalty = c("separable", "adaptive"), variance = c("fixed", "unknown"), 
+lambda1, lambda0, theta = 0.5, sigma = 1, a = 1, b, nu = 0, xi = 0, 
 eps = 0.001, max.iter = 500,  counter = 10, warn = FALSE)
 }
 \arguments{
   \item{X}{The design matrix (n x p), without an intercept.  \code{SSLASSO}
-  standardizes the data  by default (mean zero and variance \code{n}).}
+  standardizes the data by default.}
   \item{y}{Vector of continuous responses (n x 1). The  responses will be centered by default.}
   \item{penalty}{The penalty to be applied to the model.  Either "separable"
     (with a fixed \code{theta}),  "adaptive" (with a random \code{theta}, where \code{theta~ B(a,p)}).}
-  \item{variance}{Whether the error variance is also estimated. Either "known" (with a fixed \code{sigma}) or "unknown" (with a random \code{sigma}, where \code{sigma ~ IG(nu, xi)}).}
-  \item{lambda1}{Slab variance parameter. Needs to be greater than \code{lambda0}.}
+  \item{variance}{Whether the error variance is also estimated. Either "fixed" (with a fixed \code{sigma}) or "unknown" (with a random \code{sigma}, where \code{sigma ~ IG(nu, xi)}).}
+  \item{lambda1}{Slab variance parameter. Needs to be less than \code{lambda0}.}
   \item{lambda0}{Spike penalty parameters (L x 1). Either a numeric value for a single run (L=1) or a sequence of increasing values for dynamic posterior exploration.}
   \item{theta}{Prior mixing proportion. For "separable" penalty, this value is fixed. For "adaptive" penalty, this value is used as a starting value. }
-  \item{sigma}{Error variance. For "known" variance, this value is fixed. For "unknown" variance, this value is used as a starting value.}
+  \item{sigma}{Error variance. For "fixed" variance, this value is fixed. For "unknown" variance, this value is used as a starting value.}
   \item{a}{Hyperparameter of the beta prior \code{B(a,b)} for the adaptive penalty (default \code{a=1}).}
-  \item{b}{Hyperparameter of the beta prior \code{B(a,b)} for the adaptive penalty (default \code{b=p}).}
+  \item{b}{Hyperparameter of the beta prior \code{B(a,b)} for the adaptive penalty (default \code{b=ncol(X)}).}
   \item{nu}{Hyperparameter of the inverse-gamma prior \code{IG(nu, xi)} for the unknown variance case (default \code{nu = 0}).}
   \item{xi}{Hyperparameter of the inverse-gamma prior \code{IG(nu, xi)} for the unknown variance case (default \code{xi = 0}).}
   \item{eps}{Optional. Convergence criterion: converged when difference in regression coefficients is less than \code{eps} (default \code{eps = 0.001}).}
@@ -73,7 +73,7 @@ beta <- c(1, 2, 3, rep(0, p-3))
 y = X[,1] * beta[1] + X[,2] * beta[2] + X[,3] * beta[3] + rnorm(n)
 
 # Oracle SSLASSO with known variance
-result1 <- SSLASSO(X, y, penalty = "separable", variance = "known", 
+result1 <- SSLASSO(X, y, penalty = "separable", variance = "fixed", 
                lambda1 = lambda1, lambda0 = lambda0, 
                theta = 3/p)
 plot(result1)

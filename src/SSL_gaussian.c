@@ -35,7 +35,7 @@ SEXP cleanupG(double *a, double *r, int *e1, int *e2, double *z, double *thetas,
   SET_VECTOR_ELT(res, 3, thetas_export);
   SET_VECTOR_ELT(res, 4, sigmas_export);
 
-  UNPROTECT(6);
+  UNPROTECT(1);
 
   return(res);
 }
@@ -203,27 +203,33 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda0s
 	  if ( n * sigma2 < 1) {
 	    for (int j=0; j<p; j++) a[j] = 0;
 	    for (int i=0; i<n; i++) r[i] = y[i];
+	    sigma2 = 1;
 	  } else{ 
 	    for (int j=0; j<p; j++) a[j] = b[l*p+j];
-	  } 
+	  }
 	  
-
+	  if (INTEGER(iter)[l] == max_iter){
+	    thetas[l] = NAN;
+	    sigmas[l] = NAN;
+	    sigma2 = 1;
+	  }
+	 
+	  
 	  if (converged) {
 	    thetas[l]=theta;
-      sigmas[l] = sqrt(sigma2);
-	    break;}
+	    sigmas[l] = sqrt(sigma2);
+	     break;}
+	  
 	}
 
 
-	if (INTEGER(iter)[l] == max_iter){
-	  thetas[l] = NAN;
-	  sigmas[l] = NAN;
-	}
+
 
   
   }
 
   res = cleanupG(a, r, e1, e2, z, thetas, sigmas, beta, loss, iter, thetas_export, sigmas_export);
+  UNPROTECT(5);
 
   return(res);
 }
