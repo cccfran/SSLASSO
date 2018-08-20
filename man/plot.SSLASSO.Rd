@@ -10,9 +10,8 @@
   \item{x}{Fitted \code{"SSLASSO"} model.}
   \item{...}{Other graphical parameters to plot.}
 }
-\references{Rockova, V. and George, E.I. (2016) The Spike-and-Slab LASSO. Journal of the American Statistical Association (Accepted).
+\references{Rockova, V. and George, E.I. (2018) The Spike-and-Slab LASSO. Journal of the American Statistical Association.}
 
-Moran, G., Rockova, V. and George, E.I. (2017) On variance estimation for high dimensional Bayesian regression. Manuscript.}
 \author{Veronika Rockova <Veronika.Rockova@chicagobooth.edu>}
 \seealso{\code{\link{SSLASSO}}}
 \examples{

@@ -7,11 +7,7 @@
 #include <stdio.h>
 
 
-
-SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda0s_, SEXP eps_, SEXP max_iter_, 
-                  SEXP lambda1_, SEXP theta_, SEXP sigma_, SEXP counter_, SEXP a_,
-                  SEXP b_, SEXP nu_, SEXP xi_);
-
+SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_, SEXP lambda0s_, SEXP theta_, SEXP sigma_, SEXP a_,  SEXP b_, SEXP eps_, SEXP max_iter_, SEXP counter_);
 SEXP standardize(SEXP X_);
 
 
@@ -28,19 +24,6 @@ double crossprod(double *X, double *y, int n, int j) {
 }
 
 
-// Sum of squares of jth column of X
-double sqsum(double *X, int n, int j) {
-
-  int nn = n*j;
-
-  double val=0;
-
-  for (int i=0;i<n;i++) val += pow(X[nn+i], 2);
-
-  return(val);
-
-}
-
 double sum(double *x, int n) {
 
   double val=0;
@@ -50,13 +33,13 @@ double sum(double *x, int n) {
   return(val);
 }
 
-int checkConvergence(double *beta, double *beta_old, double eps, int l, int J) {
+int checkConvergence(double *beta, double *beta_old, double eps, int l, int p) {
 
   int converged = 1;
 
-  for (int j=0; j<J; j++) {
+  for (int j=0; j<p; j++) {
 
-    if (fabs((beta[l*J+j]-beta_old[j])/beta_old[j]) > eps) {
+    if (fabs((beta[l*p+j]-beta_old[j])/beta_old[j]) > eps) {
 
       converged = 0;
 
@@ -116,7 +99,7 @@ double lambdastar(double x, double theta, double lambda1, double lambda0){
 
 }
 
-double update_sigma(double *r, int n, double nu, double xi, int l){
+double update_sigma2(double *r, int n){
   
   double sum_r2 = 0;
   
@@ -124,7 +107,7 @@ double update_sigma(double *r, int n, double nu, double xi, int l){
   
   double sig;
   
-  sig = (sum_r2 + nu * xi)/(n + nu + 2);
+  sig = (sum_r2)/(n + 2);
   
   return(sig);
 }
@@ -157,7 +140,7 @@ double SSL(double z, double beta, double lambda0, double lambda1, double theta, 
   }
 }
 
-double g(double x, double theta, double sigma2, double lambda1, double lambda0, double n){
+double g(double x, double theta, double sigma2, double lambda1, double lambda0, int n){
   
   double value=lambdastar(x,theta,lambda1,lambda0);
   
@@ -169,9 +152,9 @@ double threshold(double theta, double sigma2, double lambda1, double lambda0, in
   
   if (lambda0==lambda1){return sigma2*lambda1;} else{
     
-    if( g(0,theta,sigma2, lambda1,lambda0,n)>0){
+    if( g(0,theta,sigma2, lambda1,lambda0, n)>0){
       
-      return sqrt(2*n*sigma2*log(1/pstar(0,theta,lambda1,lambda0)))+sigma2*lambda1;
+      return sqrt(2* n *sigma2*log(1/pstar(0,theta,lambda1,lambda0)))+sigma2*lambda1;
       
     }
     
@@ -181,22 +164,4 @@ double threshold(double theta, double sigma2, double lambda1, double lambda0, in
       
     }
   }
-}
-
-
-static R_CallMethodDef callMethods[] = {
-
-  {"SSL_gaussian", (DL_FUNC) &SSL_gaussian, 12},
-
-  {"standardize", (DL_FUNC) &standardize, 1},
-
-
-  {NULL, NULL, 0}
-
-};
-
-void R_init_ncvreg(DllInfo *info) {
-
-  R_registerRoutines(info, NULL, callMethods, NULL, NULL);
-
 }
