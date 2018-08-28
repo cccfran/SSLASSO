@@ -70,19 +70,17 @@ SSLASSO <- function(X,
   }
   
   # get initial value for sigma
+  df = 3
+  sigquant = 0.9
+  sigest <- sd(yy)
+  qchi <- qchisq(1 - sigquant, df)
+  ncp <- sigest^2 * qchi / df
+  min_sigma2 <- sigest^2 / n
+  
   if (variance == "unknown") {
-    df = 3
-    sigquant = 0.9
-    sigest <- sd(yy)
-    qchi <- qchisq(1 - sigquant, df)
-    ncp <- sigest^2 * qchi / df
-    min_q <- 0.001
-    min_sigma2 <- 1/qchisq(1 - min_q, df) * ncp * df
     if (missing(sigma)) {
-      sigma <- sqrt(df * ncp / (df - 2))
+      sigma <- sqrt(df * ncp / (df + 2))
     }
-  } else {
-    min_sigma2 <- 0
   }
   
   ## Fit

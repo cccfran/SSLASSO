@@ -1,6 +1,6 @@
 Package: SSLASSO
-Version: 1.2
-Date: 2018-08-20
+Version: 1.2-1
+Date: 2018-08-28
 Title: The Spike-and-Slab LASSO
 Author: Veronika Rockova [aut,cre], Gemma Moran [aut]
 Maintainer: Gemma Moran <gmoran@wharton.upenn.edu>
@@ -10,6 +10,6 @@ Depends:
 License: GPL-3
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2018-08-20 18:50:43 UTC; gem
+Packaged: 2018-08-28 17:37:32 UTC; gem
 Repository: CRAN
-Date/Publication: 2018-08-20 19:10:03 UTC
+Date/Publication: 2018-08-28 17:54:27 UTC

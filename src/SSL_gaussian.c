@@ -170,15 +170,16 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
           }
         } else {
           estimate_sigma = 0;
+          if (INTEGER(iter)[l - 1] == max_iter) {
+            sigma2 = sigma2_init;
+          }
         }
-      }
 
+      }
 
       thresholds[l] = threshold(theta, sigma2, lambda1, lambda0, n);
 
       // Determine eligible set
-
-      // cutoff = 2 * thresholds[l] - thresholds[l - 1];
 
       cutoff = thresholds[l];
 
