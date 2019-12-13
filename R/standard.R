@@ -1,8 +1,8 @@
 # code has been adapted from the ncvreg package (Breheny and Huang, 2011)
 standard <- function(X) {
-  if (class(X) != "matrix") {
+  if (!is(X, "matrix")) {
     tmp <- try(X <- model.matrix(~0+., data=X), silent=TRUE)
-    if (class(tmp)[1] == "try-error") stop("X must be a matrix or able to be coerced to a matrix")
+    if (is(tmp, "try-error")) stop("X must be a matrix or able to be coerced to a matrix")
   }
   STD <- .Call("standardize", X, PACKAGE = "SSLASSO")
   dimnames(STD[[1]]) <- dimnames(X)

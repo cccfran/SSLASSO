@@ -129,7 +129,7 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
     e1[j] = 0;
   }
 
-  // Index of an elible set from the strong rule
+  // Index of an eligible set from the strong rule
   int *e2 = Calloc(p, int); 
 
   for (int j=0; j<p; j++) {

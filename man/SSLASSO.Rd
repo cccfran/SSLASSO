@@ -8,7 +8,7 @@
   parameter \code{lambda0}. The code has been adapted from the \code{ncvreg} package (Breheny and Huang, 2011). }
 \usage{
 SSLASSO(X, y, penalty = c("adaptive", "separable"), variance = c("fixed", "unknown"), 
-lambda1, lambda0, nlambda = 100, theta = 0.5, sigma = 1, a = 1, b,  
+lambda1, lambda0, nlambda = 100, theta = 0.5, sigma, a = 1, b,  
 eps = 0.001, max.iter = 500,  counter = 10, warn = FALSE)
 }
 \arguments{

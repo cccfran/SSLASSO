@@ -6,7 +6,7 @@ SSLASSO <- function(X,
                     lambda0,
                     nlambda = 100,
                     theta = 0.5, 
-                    sigma = 1,
+                    sigma,
                     a = 1, b, 
                     eps = 0.001, 
                     max.iter = 500, 
@@ -17,18 +17,18 @@ SSLASSO <- function(X,
   penalty <- match.arg(penalty)
   variance <- match.arg(variance)
   
-  if (class(X) != "matrix") {
+  if (!is(X, "matrix")) {
     tmp <- try(X <- model.matrix(~0+., data=X), silent=TRUE)
-    if (class(tmp)[1] == "try-error") {
+    if (is(tmp, "try-error")) {
       stop("X must be a matrix or able to be coerced to a matrix")
     }
   }
   if (storage.mode(X) == "integer") {
     storage.mode(X) <- "double"
   }
-  if (class(y) != "numeric") {
+  if (!is(y, "numeric")) {
     tmp <- try(y <- as.numeric(y), silent=TRUE)
-    if (class(tmp)[1] == "try-error") {
+    if (is(tmp,"try-error")) {
       stop("y must numeric or able to be coerced to numeric")
     }
   }
@@ -70,18 +70,24 @@ SSLASSO <- function(X,
   }
   
   # get initial value for sigma
-  df = 3
-  sigquant = 0.9
+  df <- 3
+  sigquant <- 0.9
   sigest <- sd(yy)
   qchi <- qchisq(1 - sigquant, df)
   ncp <- sigest^2 * qchi / df
   min_sigma2 <- sigest^2 / n
-  
+
   if (variance == "unknown") {
     if (missing(sigma)) {
       sigma <- sqrt(df * ncp / (df + 2))
-    }
+    } 
+  } else {
+    if (missing(sigma)) {
+      sigma <- sqrt(df * ncp / (df - 2))
+    } 
   }
+
+ 
   
   ## Fit
   res <- .Call("SSL_gaussian", XX, yy, penalty, variance, as.double(lambda1), as.numeric(lambda0), 
