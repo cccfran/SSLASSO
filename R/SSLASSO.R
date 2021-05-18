@@ -11,7 +11,8 @@ SSLASSO <- function(X,
                     eps = 0.001, 
                     max.iter = 500, 
                     counter = 10, 
-                    warn = FALSE) {
+                    warn = FALSE,
+                    normal_mean = FALSE) {
   
   # Coersion
   penalty <- match.arg(penalty)
@@ -38,11 +39,16 @@ SSLASSO <- function(X,
   }
   
   ## Standardize
-  XX <- standard(X)
+  XX <- X
+  if(!normal_mean) {
+    XX <- standard(X)
+    ns <- attr(XX, "nonsingular")
+  }
   ns <- attr(XX, "nonsingular")
   p <- ncol(XX)
   
-  yy <- y - mean(y)
+  yy <- y
+  if(!normal_mean) yy <- y - mean(y)
   n <- length(yy)
   
   if (missing(lambda0)) {
@@ -92,7 +98,7 @@ SSLASSO <- function(X,
   ## Fit
   res <- .Call("SSL_gaussian", XX, yy, penalty, variance, as.double(lambda1), as.numeric(lambda0), 
                as.double(theta), as.double(sigma), as.double(min_sigma2), as.double(a), as.double(b), 
-               eps, as.integer(max.iter), as.integer(counter), PACKAGE = "SSLASSO")
+               eps, as.integer(max.iter), as.integer(counter), as.integer(normal_mean), PACKAGE = "SSLASSO")
   bb <- matrix(res[[1]], p, nlambda)
   iter <- res[[3]]
   thetas<-res[[4]]

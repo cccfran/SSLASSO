@@ -8,12 +8,12 @@
 */
 
 /* .Call calls */
-extern SEXP SSL_gaussian(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP SSL_gaussian(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP standardize(SEXP);
 
 
 static const R_CallMethodDef CallEntries[] = {
-    {"SSL_gaussian", (DL_FUNC) &SSL_gaussian, 14},
+    {"SSL_gaussian", (DL_FUNC) &SSL_gaussian, 15},
     {"standardize",  (DL_FUNC) &standardize,   1},
     {NULL, NULL, 0}
 };

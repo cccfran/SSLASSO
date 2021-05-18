@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 
-SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_, SEXP lambda0s_, SEXP theta_, SEXP sigma_, SEXP a_,  SEXP b_, SEXP eps_, SEXP max_iter_, SEXP counter_);
+SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_, SEXP lambda0s_, SEXP theta_, SEXP sigma_, SEXP a_,  SEXP b_, SEXP eps_, SEXP max_iter_, SEXP counter_, SEXP normal_mean_);
 SEXP standardize(SEXP X_);
 
 

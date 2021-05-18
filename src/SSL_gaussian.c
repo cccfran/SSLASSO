@@ -47,7 +47,7 @@ double gLoss(double *r, int n) {
 
 // Coordinate descent for Gaussian models
 
-SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_, SEXP lambda0s_, SEXP theta_, SEXP sigma_, SEXP min_sigma2_, SEXP a_,  SEXP b_, SEXP eps_, SEXP max_iter_, SEXP counter_) {
+SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_, SEXP lambda0s_, SEXP theta_, SEXP sigma_, SEXP min_sigma2_, SEXP a_,  SEXP b_, SEXP eps_, SEXP max_iter_, SEXP counter_, SEXP normal_mean_) {
 
   // Declarations
   int n = length(y_);
@@ -72,6 +72,7 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
   double eps = REAL(eps_)[0];
   int max_iter = INTEGER(max_iter_)[0];
   int count_max = INTEGER(counter_)[0];
+  int normal_mean = INTEGER(normal_mean_)[0];
 
   // create containers for R output
   SEXP res, beta, loss, iter, thetas_export, sigmas_export;
@@ -177,7 +178,11 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
 
       }
 
-      thresholds[l] = threshold(theta, sigma2, lambda1, lambda0, n);
+      if (normal_mean) {
+        thresholds[l] = threshold(theta, sigma2, lambda1, lambda0, 1);
+      } else {
+        thresholds[l] = threshold(theta, sigma2, lambda1, lambda0, n);
+      }
 
       // Determine eligible set
 
@@ -191,7 +196,11 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
 
     } else {
 
-      thresholds[l] = threshold(theta, sigma2, lambda1, lambda0, n);
+      if (normal_mean) {
+        thresholds[l] = threshold(theta, sigma2, lambda1, lambda0, 1);
+      } else {
+        thresholds[l] = threshold(theta, sigma2, lambda1, lambda0, n);
+      }
 
       cutoff = thresholds[l];
 
@@ -224,8 +233,11 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
               z[j] = crossprod(X, r, n, j) + n * a[j];
 
                 // Update beta_j
-
-              b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, n, delta, sigma2);
+              if (normal_mean) {
+                b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, 1, delta, sigma2);
+              } else {
+                b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, n, delta, sigma2);
+              }
 
                 // Update r
 
@@ -286,8 +298,12 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
             z[j] = crossprod(X, r, n, j) + n * a[j];
 
             // Update beta_j
-
-            b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, n, delta, sigma2);
+            if (normal_mean) {
+              b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, 1, delta, sigma2);
+            } else {
+              b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, n, delta, sigma2);
+            }
+            
 
             // If something enters the eligible set, update eligible set & residuals
 
@@ -342,7 +358,11 @@ SEXP SSL_gaussian(SEXP X_, SEXP y_, SEXP penalty_, SEXP variance_, SEXP lambda1_
 
           // Update beta_j
 
-          b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, n, delta, sigma2);
+          if (normal_mean) {
+            b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, 1, delta, sigma2);
+          } else {
+            b[l*p+j] = SSL(z[j], a[j], lambda0, lambda1, theta, 1, n, delta, sigma2);
+          }
 
           // If something enters the eligible set, update eligible set & residuals
 
